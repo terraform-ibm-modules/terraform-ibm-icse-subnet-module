@@ -6,3 +6,8 @@
 # the settings of this repository are updated immediately.
 #
 _extends: repo-settings
+repository:
+  # Update the name and description to match your repo
+  name: "terraform-ibm-icse-subnet-module"
+
+  description: "Create subnet and address prefixes"
