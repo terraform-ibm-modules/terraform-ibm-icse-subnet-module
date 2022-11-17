@@ -1,22 +1,19 @@
-/********************************************************************
+##############################################################################
+# Subnet Outputs
+##############################################################################
 
-This file is used to capture ROOT module outputs.
-
-E.g:
-
-output "at_id" {
-  description = "Activity tracker id"
-  value       = concat(ibm_resource_instance.at_instance.*.id, [""])[0]
+output "subnet_zone_list" {
+  description = "A list containing subnet IDs and subnet zones"
+  value = [
+    for subnet in ibm_is_subnet.subnet : {
+      name = subnet.name
+      id   = subnet.id
+      zone = subnet.zone
+      cidr = subnet.ipv4_cidr_block
+      crn  = subnet.crn
+    }
+  ]
 }
 
-output "at_guid" {
-  description = "The GUID of the activity tracker"
-  value       = concat(ibm_resource_instance.at_instance.*.guid, [""])[0]
-}
 
-output "at_key_id" {
-  description = "Activity tracker key id"
-  value       = concat(ibm_resource_key.activity_tracker_key.*.id, [""])[0]
-}
-
-*********************************************************************/
+##############################################################################
