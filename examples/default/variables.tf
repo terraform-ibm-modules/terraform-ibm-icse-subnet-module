@@ -35,6 +35,7 @@ variable "tags" {
 variable "vpc_id" {
   description = "ID of the VPC where subnets will be created"
   type        = string
+  default     = null
 }
 
 variable "use_manual_address_prefixes" {
