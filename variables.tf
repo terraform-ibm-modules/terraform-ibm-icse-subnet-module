@@ -5,11 +5,13 @@
 variable "prefix" {
   description = "The prefix that you would like to append to your resources"
   type        = string
+  default     = "subnet"
 }
 
 variable "region" {
   description = "The region to which to deploy the VPC"
   type        = string
+  default     = "us-south"
 }
 
 variable "resource_group_id" {
@@ -41,7 +43,7 @@ variable "use_manual_address_prefixes" {
   default     = false
 }
 
-variable prepend_prefix_to_network_acl_names {
+variable "prepend_prefix_to_network_acl_names" {
   description = "Add the prefix to network acl names when looking them up from `network_acls` variable."
   type        = bool
   default     = true
