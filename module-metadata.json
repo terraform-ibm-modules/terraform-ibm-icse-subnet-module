@@ -155,7 +155,8 @@
       "required": true,
       "source": [
         "ibm_is_subnet.subnet.vpc",
-        "ibm_is_vpc_address_prefix.subnet_prefix.vpc"
+        "ibm_is_vpc_address_prefix.subnet_prefix.vpc",
+        "module.subnet_list_to_map"
       ],
       "pos": {
         "filename": "variables.tf",
@@ -260,6 +261,7 @@
       "name": "subnet_list_to_map",
       "source": "./list_to_map",
       "attributes": {
+        "list": "vpc_id",
         "prefix": "prefix"
       },
       "managed_resources": {},

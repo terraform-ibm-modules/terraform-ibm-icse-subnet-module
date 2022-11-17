@@ -4,7 +4,7 @@
 
 module "subnet_list_to_map" {
   source = "./list_to_map"
-  list   = local.subnet_list
+  list   = var.vpc_id == null ? [] : local.subnet_list
   prefix = var.prefix
 }
 
