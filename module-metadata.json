@@ -11,7 +11,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 52
+        "line": 53
       }
     },
     "prefix": {
@@ -36,7 +36,7 @@
       "default": true,
       "pos": {
         "filename": "variables.tf",
-        "line": 46
+        "line": 47
       }
     },
     "public_gateways": {
@@ -50,7 +50,7 @@
       },
       "pos": {
         "filename": "variables.tf",
-        "line": 63
+        "line": 64
       }
     },
     "region": {
@@ -110,7 +110,7 @@
       },
       "pos": {
         "filename": "variables.tf",
-        "line": 83
+        "line": 84
       }
     },
     "tags": {
@@ -143,7 +143,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 40
+        "line": 41
       },
       "immutable": true,
       "computed": true
@@ -154,6 +154,7 @@
       "description": "ID of the VPC where subnets will be created",
       "required": true,
       "source": [
+        "ibm_is_subnet.subnet.for_each",
         "ibm_is_subnet.subnet.vpc",
         "ibm_is_vpc_address_prefix.subnet_prefix.vpc"
       ],
@@ -191,6 +192,7 @@
       "type": "ibm_is_subnet",
       "name": "subnet",
       "attributes": {
+        "for_each": "vpc_id",
         "ipv4_cidr_block": "use_manual_address_prefixes",
         "resource_group": "resource_group_id",
         "tags": "tags",
