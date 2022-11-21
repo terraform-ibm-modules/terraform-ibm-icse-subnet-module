@@ -1,29 +1,43 @@
 ##############################################################################
-# Resource Group
-# (if var.resource_group is null, create a new RG using var.prefix)
+# Subnet List to Map
 ##############################################################################
 
-resource "ibm_resource_group" "resource_group" {
-  count    = var.resource_group != null ? 0 : 1
-  name     = "${var.prefix}-rg"
-  quota_id = null
+module "subnet_list_to_map" {
+  source = "./list_to_map"
+  list   = local.subnet_list
+  prefix = var.prefix
 }
 
-data "ibm_resource_group" "existing_resource_group" {
-  count = var.resource_group != null ? 1 : 0
-  name  = var.resource_group
+##############################################################################
+
+##############################################################################
+# Create Subnet Prefixes
+##############################################################################
+
+resource "ibm_is_vpc_address_prefix" "subnet_prefix" {
+  for_each = var.use_manual_address_prefixes == true || var.vpc_id == null ? {} : module.subnet_list_to_map.value
+  name     = "${var.prefix}-${each.value.name}"
+  zone     = each.value.zone
+  vpc      = var.vpc_id
+  cidr     = each.value.cidr
 }
 
-locals {
-  resource_group = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
+##############################################################################
+
+##############################################################################
+# Create Subnets
+##############################################################################
+
+resource "ibm_is_subnet" "subnet" {
+  for_each        = var.vpc_id == null ? {} : module.subnet_list_to_map.value
+  vpc             = var.vpc_id
+  resource_group  = var.resource_group_id
+  tags            = var.tags
+  name            = each.key
+  zone            = each.value.zone
+  ipv4_cidr_block = var.use_manual_address_prefixes == true ? each.value.cidr : ibm_is_vpc_address_prefix.subnet_prefix[each.key].cidr
+  network_acl     = each.value.network_acl
+  public_gateway  = each.value.public_gateway
 }
 
-#############################################################################
-# VPC
-#############################################################################
-
-resource "ibm_is_vpc" "vpc" {
-  name           = "${var.prefix}-vpc"
-  resource_group = local.resource_group
-  tags           = var.resource_tags
-}
+##############################################################################

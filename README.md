@@ -119,9 +119,7 @@ statement instead the previous block.
 <!-- BEGIN EXAMPLES HOOK -->
 ## Examples
 
-- [ Default example](examples/default)
-- [ Example that uses existing resources](examples/existing-resources)
-- [ Non default example](examples/non-default)
+- [Examples](examples)
 <!-- END EXAMPLES HOOK -->
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
@@ -129,23 +127,43 @@ statement instead the previous block.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.2.9 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >=1.43.0 |
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_acl_list_to_map"></a> [acl\_list\_to\_map](#module\_acl\_list\_to\_map) | ./list_to_map | n/a |
+| <a name="module_subnet_list_to_map"></a> [subnet\_list\_to\_map](#module\_subnet\_list\_to\_map) | ./list_to_map | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [ibm_is_subnet.subnet](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_subnet) | resource |
+| [ibm_is_vpc_address_prefix.subnet_prefix](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpc_address_prefix) | resource |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_network_acls"></a> [network\_acls](#input\_network\_acls) | List of ACLs to be used for subnets. | <pre>list(<br>    object({<br>      id   = string<br>      name = string<br>    })<br>  )</pre> | `[]` | no |
+| <a name="input_prefix"></a> [prefix](#input\_prefix) | The prefix that you would like to append to your resources | `string` | `"subnet"` | no |
+| <a name="input_prepend_prefix_to_network_acl_names"></a> [prepend\_prefix\_to\_network\_acl\_names](#input\_prepend\_prefix\_to\_network\_acl\_names) | Add the prefix to network acl names when looking them up from `network_acls` variable. | `bool` | `true` | no |
+| <a name="input_public_gateways"></a> [public\_gateways](#input\_public\_gateways) | Map of public gatways | <pre>object({<br>    zone-1 = string<br>    zone-2 = string<br>    zone-3 = string<br>  })</pre> | <pre>{<br>  "zone-1": null,<br>  "zone-2": null,<br>  "zone-3": null<br>}</pre> | no |
+| <a name="input_region"></a> [region](#input\_region) | The region to which to deploy the VPC | `string` | `"us-south"` | no |
+| <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | ID of the resource group where subnets will be provisioned | `string` | `null` | no |
+| <a name="input_subnets"></a> [subnets](#input\_subnets) | List of subnets for the vpc. For each item in each array, a subnet will be created. Items can be either CIDR blocks or total ipv4 addressess. Public gateways will be enabled only in zones where a gateway has been created | <pre>object({<br>    zone-1 = list(object({<br>      name           = string<br>      cidr           = string<br>      public_gateway = optional(bool)<br>      acl_name       = string<br>    }))<br>    zone-2 = list(object({<br>      name           = string<br>      cidr           = string<br>      public_gateway = optional(bool)<br>      acl_name       = string<br>    }))<br>    zone-3 = list(object({<br>      name           = string<br>      cidr           = string<br>      public_gateway = optional(bool)<br>      acl_name       = string<br>    }))<br>  })</pre> | <pre>{<br>  "zone-1": [<br>    {<br>      "acl_name": "vpc-acl",<br>      "cidr": "10.10.10.0/24",<br>      "name": "subnet-a",<br>      "public_gateway": true<br>    }<br>  ],<br>  "zone-2": [<br>    {<br>      "acl_name": "vpc-acl",<br>      "cidr": "10.20.10.0/24",<br>      "name": "subnet-b",<br>      "public_gateway": true<br>    }<br>  ],<br>  "zone-3": [<br>    {<br>      "acl_name": "vpc-acl",<br>      "cidr": "10.30.10.0/24",<br>      "name": "subnet-c",<br>      "public_gateway": false<br>    }<br>  ]<br>}</pre> | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | List of Tags for the resource created | `list(string)` | `null` | no |
+| <a name="input_use_manual_address_prefixes"></a> [use\_manual\_address\_prefixes](#input\_use\_manual\_address\_prefixes) | True if using manual address prefix creation. If false, address prefixes will be created in the VPC automatically | `bool` | `false` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | ID of the VPC where subnets will be created | `string` | `null` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_subnet_zone_list"></a> [subnet\_zone\_list](#output\_subnet\_zone\_list) | A list containing subnet IDs and subnet zones |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 <!-- Leave this section as is so that your module has a link to local development environment set up steps for contributors to follow -->

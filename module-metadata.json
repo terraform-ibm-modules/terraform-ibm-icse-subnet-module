@@ -1,12 +1,294 @@
 {
   "path": ".",
-  "variables": {},
-  "outputs": {},
+  "variables": {
+    "network_acls": {
+      "name": "network_acls",
+      "type": "list(\n    object({\n      id   = string\n      name = string\n    })\n  )",
+      "description": "List of ACLs to be used for subnets.",
+      "default": [],
+      "source": [
+        "module.acl_list_to_map"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 53
+      }
+    },
+    "prefix": {
+      "name": "prefix",
+      "type": "string",
+      "description": "The prefix that you would like to append to your resources",
+      "default": "subnet",
+      "required": true,
+      "source": [
+        "ibm_is_vpc_address_prefix.subnet_prefix.name",
+        "module.subnet_list_to_map"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 5
+      }
+    },
+    "prepend_prefix_to_network_acl_names": {
+      "name": "prepend_prefix_to_network_acl_names",
+      "type": "bool",
+      "description": "Add the prefix to network acl names when looking them up from `network_acls` variable.",
+      "default": true,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 47
+      }
+    },
+    "public_gateways": {
+      "name": "public_gateways",
+      "type": "object({\n    zone-1 = string\n    zone-2 = string\n    zone-3 = string\n  })",
+      "description": "Map of public gatways",
+      "default": {
+        "zone-1": null,
+        "zone-2": null,
+        "zone-3": null
+      },
+      "pos": {
+        "filename": "variables.tf",
+        "line": 64
+      }
+    },
+    "region": {
+      "name": "region",
+      "type": "string",
+      "description": "The region to which to deploy the VPC",
+      "default": "us-south",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 11
+      }
+    },
+    "resource_group_id": {
+      "name": "resource_group_id",
+      "type": "string",
+      "description": "ID of the resource group where subnets will be provisioned",
+      "source": [
+        "ibm_is_subnet.subnet.resource_group"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 17
+      },
+      "cloud_data_type": "resource_group",
+      "immutable": true,
+      "computed": true
+    },
+    "subnets": {
+      "name": "subnets",
+      "type": "object({\n    zone-1 = list(object({\n      name           = string\n      cidr           = string\n      public_gateway = optional(bool)\n      acl_name       = string\n    }))\n    zone-2 = list(object({\n      name           = string\n      cidr           = string\n      public_gateway = optional(bool)\n      acl_name       = string\n    }))\n    zone-3 = list(object({\n      name           = string\n      cidr           = string\n      public_gateway = optional(bool)\n      acl_name       = string\n    }))\n  })",
+      "description": "List of subnets for the vpc. For each item in each array, a subnet will be created. Items can be either CIDR blocks or total ipv4 addressess. Public gateways will be enabled only in zones where a gateway has been created",
+      "default": {
+        "zone-1": [
+          {
+            "acl_name": "vpc-acl",
+            "cidr": "10.10.10.0/24",
+            "name": "subnet-a",
+            "public_gateway": true
+          }
+        ],
+        "zone-2": [
+          {
+            "acl_name": "vpc-acl",
+            "cidr": "10.20.10.0/24",
+            "name": "subnet-b",
+            "public_gateway": true
+          }
+        ],
+        "zone-3": [
+          {
+            "acl_name": "vpc-acl",
+            "cidr": "10.30.10.0/24",
+            "name": "subnet-c",
+            "public_gateway": false
+          }
+        ]
+      },
+      "pos": {
+        "filename": "variables.tf",
+        "line": 84
+      }
+    },
+    "tags": {
+      "name": "tags",
+      "type": "list(string)",
+      "description": "List of Tags for the resource created",
+      "source": [
+        "ibm_is_subnet.subnet.tags"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 23
+      },
+      "min_length": 1,
+      "max_length": 128,
+      "matches": "^[A-Za-z0-9:_ .-]+$",
+      "computed": true,
+      "elem": {
+        "type": "TypeString"
+      }
+    },
+    "use_manual_address_prefixes": {
+      "name": "use_manual_address_prefixes",
+      "type": "bool",
+      "description": "True if using manual address prefix creation. If false, address prefixes will be created in the VPC automatically",
+      "default": false,
+      "source": [
+        "ibm_is_subnet.subnet.ipv4_cidr_block",
+        "ibm_is_vpc_address_prefix.subnet_prefix.for_each"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 41
+      },
+      "immutable": true,
+      "computed": true
+    },
+    "vpc_id": {
+      "name": "vpc_id",
+      "type": "string",
+      "description": "ID of the VPC where subnets will be created",
+      "required": true,
+      "source": [
+        "ibm_is_subnet.subnet.for_each",
+        "ibm_is_subnet.subnet.vpc",
+        "ibm_is_vpc_address_prefix.subnet_prefix.vpc"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 35
+      },
+      "immutable": true
+    }
+  },
+  "outputs": {
+    "subnet_zone_list": {
+      "name": "subnet_zone_list",
+      "description": "A list containing subnet IDs and subnet zones",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 5
+      }
+    }
+  },
   "required_core": [
-    "\u003e= 1.0.0"
+    "\u003e=1.2.9"
   ],
-  "required_providers": {},
-  "managed_resources": {},
+  "required_providers": {
+    "ibm": {
+      "source": "IBM-Cloud/ibm",
+      "version_constraints": [
+        "\u003e=1.43.0"
+      ]
+    }
+  },
+  "managed_resources": {
+    "ibm_is_subnet.subnet": {
+      "mode": "managed",
+      "type": "ibm_is_subnet",
+      "name": "subnet",
+      "attributes": {
+        "for_each": "vpc_id",
+        "ipv4_cidr_block": "use_manual_address_prefixes",
+        "resource_group": "resource_group_id",
+        "tags": "tags",
+        "vpc": "vpc_id"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 31
+      }
+    },
+    "ibm_is_vpc_address_prefix.subnet_prefix": {
+      "mode": "managed",
+      "type": "ibm_is_vpc_address_prefix",
+      "name": "subnet_prefix",
+      "attributes": {
+        "for_each": "use_manual_address_prefixes",
+        "name": "prefix",
+        "vpc": "vpc_id"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 17
+      }
+    }
+  },
   "data_resources": {},
-  "module_calls": {}
+  "module_calls": {
+    "acl_list_to_map": {
+      "name": "acl_list_to_map",
+      "source": "./list_to_map",
+      "attributes": {
+        "list": "network_acls"
+      },
+      "managed_resources": {},
+      "data_resources": {},
+      "outputs": {
+        "configuration_failure": {
+          "name": "configuration_failure",
+          "description": "Forced output",
+          "value": "local.configuration_failure_conflicting_values_lookup_value_regex_and_value_is_not_null",
+          "pos": {
+            "filename": "list_to_map/outputs.tf",
+            "line": 20
+          }
+        },
+        "value": {
+          "name": "value",
+          "description": "List converted into map",
+          "pos": {
+            "filename": "list_to_map/outputs.tf",
+            "line": 5
+          }
+        }
+      },
+      "pos": {
+        "filename": "config.tf",
+        "line": 5
+      }
+    },
+    "subnet_list_to_map": {
+      "name": "subnet_list_to_map",
+      "source": "./list_to_map",
+      "attributes": {
+        "prefix": "prefix"
+      },
+      "managed_resources": {},
+      "data_resources": {},
+      "outputs": {
+        "configuration_failure": {
+          "name": "configuration_failure",
+          "description": "Forced output",
+          "value": "local.configuration_failure_conflicting_values_lookup_value_regex_and_value_is_not_null",
+          "pos": {
+            "filename": "list_to_map/outputs.tf",
+            "line": 20
+          }
+        },
+        "value": {
+          "name": "value",
+          "description": "List converted into map",
+          "pos": {
+            "filename": "list_to_map/outputs.tf",
+            "line": 5
+          }
+        }
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 5
+      }
+    }
+  }
 }
