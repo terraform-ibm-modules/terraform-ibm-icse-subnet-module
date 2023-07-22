@@ -125,28 +125,28 @@ statement instead the previous block.
 <!-- END EXAMPLES HOOK -->
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
+### Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.3.0 |
 | <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >=1.49.0 |
 
-## Modules
+### Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_acl_list_to_map"></a> [acl\_list\_to\_map](#module\_acl\_list\_to\_map) | ./list_to_map | n/a |
 | <a name="module_subnet_list_to_map"></a> [subnet\_list\_to\_map](#module\_subnet\_list\_to\_map) | ./list_to_map | n/a |
 
-## Resources
+### Resources
 
 | Name | Type |
 |------|------|
 | [ibm_is_subnet.subnet](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_subnet) | resource |
 | [ibm_is_vpc_address_prefix.subnet_prefix](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpc_address_prefix) | resource |
 
-## Inputs
+### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
@@ -161,7 +161,7 @@ statement instead the previous block.
 | <a name="input_use_manual_address_prefixes"></a> [use\_manual\_address\_prefixes](#input\_use\_manual\_address\_prefixes) | True if using manual address prefix creation. If false, address prefixes will be created in the VPC automatically | `bool` | `false` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | ID of the VPC where subnets will be created | `string` | `null` | no |
 
-## Outputs
+### Outputs
 
 | Name | Description |
 |------|-------------|
